@@ -34,6 +34,31 @@ void setup() {
 
   // Turn on the Logic Gate Symbol LED
   digitalWrite(gateLED, HIGH);
+
+  // LED Test
+  for (int i = 1; i <= PIN3; i++) {
+  digitalWrite(ledInput1, HIGH);
+  delay(50);
+  digitalWrite(ledInput1, LOW);
+  digitalWrite(ledInput2, HIGH);
+  delay(50);
+  digitalWrite(ledInput2, LOW);
+  digitalWrite(ledInput3, HIGH);
+  delay(50);
+  digitalWrite(ledInput3, LOW);
+  digitalWrite(gateLED, HIGH);
+  delay(50);
+  digitalWrite(gateLED, LOW);
+  digitalWrite(ledOutput1, HIGH);
+  delay(50);
+  digitalWrite(ledOutput1, LOW);
+  digitalWrite(ledOutput2, HIGH);
+  delay(50);
+  digitalWrite(ledOutput2, LOW);
+  digitalWrite(gateLED, LOW);
+  delay(50);
+  digitalWrite(gateLED, HIGH);
+  }
 }
 
 void loop() {
