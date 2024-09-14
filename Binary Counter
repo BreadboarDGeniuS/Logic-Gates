@@ -1,0 +1,323 @@
+// Pin definitions (ensure these match your actual hardware connections)
+#define BI4 0
+#define LEDR1 1
+#define D3 2
+#define D4 3
+#define CLK 4
+#define ENP 5    // Enable Parallel (Counting Enable)
+#define ENT 6    // Used as LOAD input
+#define RCO 7
+#define LEDR2 8
+#define LEDR3 9
+#define NC1 10
+#define NC2 11
+#define NC3 12
+#define NC4 13
+#define D10 14
+#define D9 15
+#define D8 16
+#define D7 17
+#define BI3 18
+#define BI2 19
+#define NC5 20
+#define LEDR4 21
+#define LEDC1 22
+#define LEDC2 23
+#define LEDC3 24
+#define LEDC4 25
+#define LEDC5 26
+#define LEDC6 27
+#define NC6 28
+#define BI1 29
+#define BO1 30
+#define BO2 31
+#define BO3 32
+#define BO4 33
+#define D2 34
+#define D1 35
+#define D5 36
+#define D6 37
+#define NC7 38
+#define NC8 39
+#define CLR 40
+
+// Define the LEDControl struct
+struct LEDControl {
+  const char* name;
+  int col_states[6]; // States for LEDC1 to LEDC6
+  int row_states[4]; // States for LEDR1 to LEDR4
+};
+
+// Define the LED controls as per your mappings
+const LEDControl led_controls[] = {
+  // LED CLR (Index 0)
+  {"CLR", {LOW, HIGH, HIGH, HIGH, HIGH, HIGH}, {HIGH, LOW, LOW, LOW}},
+  // LED CLK (Index 1)
+  {"CLK", {HIGH, LOW, HIGH, HIGH, HIGH, HIGH}, {HIGH, LOW, LOW, LOW}},
+  // LED ENP (Index 2)
+  {"ENP", {HIGH, HIGH, LOW, HIGH, HIGH, HIGH}, {HIGH, LOW, LOW, LOW}},
+  // LED ENT (Index 3)
+  {"ENT", {HIGH, HIGH, HIGH, LOW, HIGH, HIGH}, {HIGH, LOW, LOW, LOW}},
+  // LED RCO (Index 4)
+  {"RCO", {HIGH, HIGH, HIGH, HIGH, LOW, HIGH}, {HIGH, LOW, LOW, LOW}},
+  // CASE LED (Index 5)
+  {"CASE", {HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, {HIGH, LOW, LOW, LOW}},
+  // LED BO1 (Index 6)
+  {"BO1", {LOW, HIGH, HIGH, HIGH, HIGH, HIGH}, {LOW, LOW, HIGH, LOW}},
+  // LED BO2 (Index 7)
+  {"BO2", {HIGH, LOW, HIGH, HIGH, HIGH, HIGH}, {LOW, LOW, HIGH, LOW}},
+  // LED BO3 (Index 8)
+  {"BO3", {HIGH, HIGH, LOW, HIGH, HIGH, HIGH}, {LOW, LOW, HIGH, LOW}},
+  // LED BO4 (Index 9)
+  {"BO4", {HIGH, HIGH, HIGH, LOW, HIGH, HIGH}, {LOW, LOW, HIGH, LOW}},
+  // LED BI1 (Index 10)
+  {"BI1", {LOW, HIGH, HIGH, HIGH, HIGH, HIGH}, {LOW, HIGH, LOW, LOW}},
+  // LED BI2 (Index 11)
+  {"BI2", {HIGH, LOW, HIGH, HIGH, HIGH, HIGH}, {LOW, HIGH, LOW, LOW}},
+  // LED BI3 (Index 12)
+  {"BI3", {HIGH, HIGH, LOW, HIGH, HIGH, HIGH}, {LOW, HIGH, LOW, LOW}},
+  // LED BI4 (Index 13)
+  {"BI4", {HIGH, HIGH, HIGH, LOW, HIGH, HIGH}, {LOW, HIGH, LOW, LOW}},
+  // LED D1 (Index 14)
+  {"D1", {HIGH, HIGH, HIGH, HIGH, LOW, HIGH}, {LOW, HIGH, LOW, LOW}},
+  // LED D2 (Index 15)
+  {"D2", {HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, {LOW, HIGH, LOW, LOW}},
+  // LED D3 (Index 16)
+  {"D3", {HIGH, HIGH, HIGH, HIGH, LOW, HIGH}, {LOW, LOW, HIGH, LOW}},
+  // LED D4 (Index 17)
+  {"D4", {HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, {LOW, LOW, HIGH, LOW}},
+  // LED D5 (Index 18)
+  {"D5", {LOW, HIGH, HIGH, HIGH, HIGH, HIGH}, {LOW, LOW, LOW, HIGH}},
+  // LED D6 (Index 19)
+  {"D6", {HIGH, LOW, HIGH, HIGH, HIGH, HIGH}, {LOW, LOW, LOW, HIGH}},
+  // LED D7 (Index 20)
+  {"D7", {HIGH, HIGH, LOW, HIGH, HIGH, HIGH}, {LOW, LOW, LOW, HIGH}},
+  // LED D8 (Index 21)
+  {"D8", {HIGH, HIGH, HIGH, LOW, HIGH, HIGH}, {LOW, LOW, LOW, HIGH}},
+  // LED D9 (Index 22)
+  {"D9", {HIGH, HIGH, HIGH, HIGH, LOW, HIGH}, {LOW, LOW, LOW, HIGH}},
+  // LED D10 (Index 23)
+  {"D10", {HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, {LOW, LOW, LOW, HIGH}},
+};
+
+const int numLEDs = sizeof(led_controls) / sizeof(LEDControl);
+
+// Decimal output pins
+const int D_pins[10] = {D1, D2, D3, D4, D5, D6, D7, D8, D9, D10};
+
+// Variables for counter logic
+int count = 0;           // 4-bit counter (0-15)
+bool clockTriggered = false;
+
+// Function to light up an LED
+void lightUpLED(const LEDControl& led) {
+  // Set column states
+  digitalWrite(LEDC1, led.col_states[0]);
+  digitalWrite(LEDC2, led.col_states[1]);
+  digitalWrite(LEDC3, led.col_states[2]);
+  digitalWrite(LEDC4, led.col_states[3]);
+  digitalWrite(LEDC5, led.col_states[4]);
+  digitalWrite(LEDC6, led.col_states[5]);
+
+  // Set row states
+  digitalWrite(LEDR1, led.row_states[0]);
+  digitalWrite(LEDR2, led.row_states[1]);
+  digitalWrite(LEDR3, led.row_states[2]);
+  digitalWrite(LEDR4, led.row_states[3]);
+}
+
+void setup() {
+  // Initialize serial communication for debugging (optional)
+  Serial.begin(9600);
+
+  // Initialize input pins
+  pinMode(CLR, INPUT);
+  pinMode(CLK, INPUT);
+  pinMode(ENP, INPUT);   // Enable Parallel (Counting Enable)
+  pinMode(ENT, INPUT);   // Used as LOAD input
+  pinMode(BI1, INPUT);
+  pinMode(BI2, INPUT);
+  pinMode(BI3, INPUT);
+  pinMode(BI4, INPUT);
+
+  // Initialize output pins
+  pinMode(RCO, OUTPUT);
+  pinMode(BO1, OUTPUT);
+  pinMode(BO2, OUTPUT);
+  pinMode(BO3, OUTPUT);
+  pinMode(BO4, OUTPUT);
+
+  // Initialize decimal output pins
+  for (int i = 0; i < 10; i++) {
+    pinMode(D_pins[i], OUTPUT);
+    digitalWrite(D_pins[i], LOW); // Start with outputs LOW
+  }
+
+  // Initialize LED matrix pins
+  pinMode(LEDC1, OUTPUT);
+  pinMode(LEDC2, OUTPUT);
+  pinMode(LEDC3, OUTPUT);
+  pinMode(LEDC4, OUTPUT);
+  pinMode(LEDC5, OUTPUT);
+  pinMode(LEDC6, OUTPUT);
+  pinMode(LEDR1, OUTPUT);
+  pinMode(LEDR2, OUTPUT);
+  pinMode(LEDR3, OUTPUT);
+  pinMode(LEDR4, OUTPUT);
+
+  // Set initial states to turn off all LEDs
+  digitalWrite(LEDC1, HIGH);
+  digitalWrite(LEDC2, HIGH);
+  digitalWrite(LEDC3, HIGH);
+  digitalWrite(LEDC4, HIGH);
+  digitalWrite(LEDC5, HIGH);
+  digitalWrite(LEDC6, HIGH);
+  digitalWrite(LEDR1, LOW);
+  digitalWrite(LEDR2, LOW);
+  digitalWrite(LEDR3, LOW);
+  digitalWrite(LEDR4, LOW);
+}
+
+void loop() {
+  // Read inputs
+  bool currCLK = digitalRead(CLK);
+  bool ENP_state = digitalRead(ENP);   // Enable Parallel (Counting Enable)
+  bool LOAD_state = digitalRead(ENT);  // Use ENT as LOAD input
+  bool CLR_state = digitalRead(CLR);
+
+  // Handle asynchronous clear
+  if (CLR_state == LOW) {
+    count = 0;
+  } else if (LOAD_state == LOW) {
+    // Handle synchronous load on rising edge of CLK
+    if (currCLK == HIGH && !clockTriggered) {
+      clockTriggered = true; // Rising edge detected
+
+      // Load the counter with value from BI1 to BI4
+      int BI_value = 0;
+      BI_value |= (digitalRead(BI1) == HIGH) ? 0x1 : 0x0;
+      BI_value |= (digitalRead(BI2) == HIGH) ? 0x2 : 0x0;
+      BI_value |= (digitalRead(BI3) == HIGH) ? 0x4 : 0x0;
+      BI_value |= (digitalRead(BI4) == HIGH) ? 0x8 : 0x0;
+      count = BI_value & 0xF; // Ensure count is within 0-15
+
+      // Optional debugging
+      // Serial.print("Counter loaded with value: ");
+      // Serial.println(count);
+    } else if (currCLK == LOW && clockTriggered) {
+      // Falling edge of CLK
+      clockTriggered = false;
+    }
+  } else if (ENP_state == HIGH) {
+    // Normal counting operation
+    if (currCLK == HIGH && !clockTriggered) {
+      clockTriggered = true; // Rising edge detected
+
+      count = (count + 1) % 16; // Increment counter (modulo 16)
+    } else if (currCLK == LOW && clockTriggered) {
+      // Falling edge of CLK
+      clockTriggered = false;
+    }
+  }
+
+  // Update BO outputs based on count
+  digitalWrite(BO1, (count & 0x1) ? HIGH : LOW); // LSB
+  digitalWrite(BO2, (count & 0x2) ? HIGH : LOW);
+  digitalWrite(BO3, (count & 0x4) ? HIGH : LOW);
+  digitalWrite(BO4, (count & 0x8) ? HIGH : LOW); // MSB
+
+  // Update RCO output
+  if (LOAD_state == HIGH && ENP_state == HIGH && count == 15) {
+    digitalWrite(RCO, HIGH);
+  } else {
+    digitalWrite(RCO, LOW);
+  }
+
+  // Update decimal outputs (active HIGH)
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(D_pins[i], LOW); // Set all to LOW initially
+  }
+  if (count >= 1 && count <= 10) {
+    digitalWrite(D_pins[count - 1], HIGH); // Activate corresponding decimal output
+  }
+
+  // Build a list of LEDs to display
+  const int maxActiveLEDs = 24; // Maximum number of LEDs
+  const LEDControl* activeLEDs[maxActiveLEDs];
+  int activeLEDCount = 0;
+
+  // Check inputs and outputs and add corresponding LEDs to activeLEDs
+
+  // Inputs
+  if (CLR_state == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[0]; // "CLR" LED
+  }
+  if (currCLK == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[1]; // "CLK" LED
+  }
+  if (ENP_state == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[2]; // "ENP" LED
+  }
+  if (LOAD_state == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[3]; // "ENT" LED (used as LOAD)
+  }
+
+  // Outputs
+  if (digitalRead(RCO) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[4]; // "RCO" LED
+  }
+
+  // Binary Inputs
+  if (digitalRead(BI1) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[10]; // "BI1" LED
+  }
+  if (digitalRead(BI2) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[11]; // "BI2" LED
+  }
+  if (digitalRead(BI3) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[12]; // "BI3" LED
+  }
+  if (digitalRead(BI4) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[13]; // "BI4" LED
+  }
+
+  // Binary Outputs
+  if (digitalRead(BO1) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[6]; // "BO1" LED
+  }
+  if (digitalRead(BO2) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[7]; // "BO2" LED
+  }
+  if (digitalRead(BO3) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[8]; // "BO3" LED
+  }
+  if (digitalRead(BO4) == HIGH && activeLEDCount < maxActiveLEDs) {
+    activeLEDs[activeLEDCount++] = &led_controls[9]; // "BO4" LED
+  }
+
+  // Decimal Outputs
+  for (int i = 0; i < 10; i++) {
+    if (digitalRead(D_pins[i]) == HIGH && activeLEDCount < maxActiveLEDs) {
+      activeLEDs[activeLEDCount++] = &led_controls[14 + i]; // "D1" to "D10" LEDs
+    }
+  }
+
+  // Cycle through active LEDs
+  const int t_slot = 1; // Adjust as needed
+  for (int i = 0; i < activeLEDCount; i++) {
+    lightUpLED(*activeLEDs[i]);
+    delay(t_slot);
+  }
+
+  // Turn off all LEDs after cycling
+  digitalWrite(LEDC1, HIGH);
+  digitalWrite(LEDC2, HIGH);
+  digitalWrite(LEDC3, HIGH);
+  digitalWrite(LEDC4, HIGH);
+  digitalWrite(LEDC5, HIGH);
+  digitalWrite(LEDC6, HIGH);
+  digitalWrite(LEDR1, LOW);
+  digitalWrite(LEDR2, LOW);
+  digitalWrite(LEDR3, LOW);
+  digitalWrite(LEDR4, LOW);
+}
