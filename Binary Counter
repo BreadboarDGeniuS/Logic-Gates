@@ -1,4 +1,4 @@
-// Pin definitions (ensure these match your actual hardware connections)
+// Pin definitions
 #define BI4 0
 #define LEDR1 1
 #define D3 2
@@ -48,7 +48,7 @@ struct LEDControl {
   int row_states[4]; // States for LEDR1 to LEDR4
 };
 
-// Define the LED controls as per your mappings
+// Define the LED controls
 const LEDControl led_controls[] = {
   // LED CLR (Index 0)
   {"CLR", {LOW, HIGH, HIGH, HIGH, HIGH, HIGH}, {HIGH, LOW, LOW, LOW}},
