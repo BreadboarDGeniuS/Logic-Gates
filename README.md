@@ -24,7 +24,7 @@ To purchase the gate kits and better support the project it's best to buy on TIN
 3. Compile and upload the code to your ATTiny1616 MCU.
 
 ## Usage
-The kit comes with 22 Logic gate units(ATTiny1616) and 1 Binary/Decimal Counter(ATMega4809)
+The kit comes with 22 Logic gate units(ATTiny1616) and 1 Binary/Decimal Counter(ATMega4809) (Virtualised LS161 and LS145)
 The gates are preconfigured when delivered in the following combination
 
 7 x AND/NAND Gates
@@ -35,87 +35,240 @@ The gates are preconfigured when delivered in the following combination
 
 This means the kit is useful immediately out of the box and can be plugged straight into a breadboard and used like traditional logic gates, you can However change what each gate is, and each gate has a small cap that shows what the gate is programmed for, an additional 18 caps of each logic type come with the kits so you can change the symbol once you reprogram the gate, this means you can use all the gates as AND/NAND for example.
 
-In essence, you get 22 breadboard pluggable MCUs with 5 x input/output ports with 5 port indicators and 1 gate indicator(ATTiny1616). And 1 breadboard pluggable MCU with 23 input/output ports with 23 port indicators and 1 gate indicator(ATMega4809). you can program the device to be or do whatever you can imagine, so you are not limited to gates. the purpose of this git repository is to keep hold of and make available the basic programs required to reset your gate to the desired gate.
+In essence, you get 22 breadboard pluggable MCUs with 5 x input/output ports with 5 port indicators and 1 gate indicator(ATTiny1616). And 1 breadboard pluggable MCU with 23 input/output ports with 23 port indicators and 1 gate indicator(ATMega4809). you can program the device to be or do whatever you can imagine, so you are not limited to gates. the purpose of this git repository is to keep hold of and make available the basic programs required to reset your gate to the desired gate, and to allow collaboration for more exciting things that the gates can be programmed to do.
 
 ## MCU inputs/outputs
 ### ATTiny1616 Digital Pin Layout:
 0 = INPUT 3,
+
 1 = INPUT LED 1,
+
 2 = INPUT LED 2,
+
 3 = INPUT LED 3,
+
 5 = GATE LED,
+
 6 = OUTPUT LED 2,
+
 7 = OUTPUT LED 1,
+
 8 = OUTPUT 2,
+
 9 = OUTPUT 1,
+
 15 = INPUT 2,
+
 16 = INPUT 1,
 
 ### ATTiny1616 direct Manipulation port layout:
 PORTA 
-2 = Input 1,
-3 = Input 2,
-4 = Input 3,
+
+2 = Input 1 = SDA,
+
+3 = Input 2 = SCL,
+
+4 = Input 3 ,
+
 5 = Input LED 1,
+
 6 = Input LED 2,
+
 7 = Input LED 3,
+
 PORTB
-0 = Output 1,
-1 = Output 2,
+
+0 = Output 1 = SCL,
+
+1 = Output 2 = SDA,
+
 2 = Output LED 1,
+
 3 = Output LED 2,
+
 4 = Gate LED,
 
 ### ATMega4809 Digital Pin Layout
-PA5	1 = LEDR1,
-PA6	2 = CLR,
-PA7	3 = CK,
-PB0	4 = ENP,
-PB1	5 = ENT,
-PB2	6 = CO,
-PB3	7 = N/C,
-PB4	8 = N/C,
-PB5	9 = N/C,
-PC0	10 = BO4,
-PC1	11 = BO3,
-PC2	12 = BI2,
-PC3	13 = BI1,
-VDD	14 = VDD,
-GND	15 = GND,
-PC4	16 = BO2,
-PC5	17 = BO1,
-PC6	18 = D10,
-PC7	19 = LEDC2,
-PD0	20 = D9,
-PD1	21 = D8,
-PD2	22 = D7,
-PD3	23 = D6,
-PD4	24 = LEDR3,
-PD5	25 = D5,
-PD6	26 = D4,
-PD7	27 = D3,
-AVDD 28 = VCC,
-GND	29 = GND,
-PE0	30 = LEDC3,
-PE1	31 = LEDR2,
-PE2	32 = D2,
-PE3	33 = D1,
-PF0	34 = N/C,
-PF1	35 = N/C,
-PF2	36 = N/C,
-PF3	37 = N/C,
-PF4	38 = N/C,
-PF5	39 = N/C,
-PF6	40 = LEDC4,
-UPDI 41 = UPDI,
-VDD	42 = VDD,
-GND	43 = GND,
-PA0	44 = N/C,
-PA1	45 = N/C,
-PA2	46 = BI3,
-PA3	47 = BI4,
-PA4	48 = LEDC1,
 
+0 = BI4,
+
+1 = LEDR1,
+
+2 = D3.
+
+3 = D4.
+
+4 = CLK,
+
+5 = ENP,
+
+6 = ENT,
+
+7 = RCO,
+
+8 = LEDR2,
+
+9 = LEDR3,
+
+10 = NC,
+
+11 = NC,
+
+12 = NC,
+
+13 = NC,
+
+14 = D10,
+
+15 = D9,
+
+16 = D8,
+
+17 = D7,
+
+18 = BI3,
+
+19 = BI2,
+
+20 = NC,
+
+21 = LEDR4,
+
+22 = LEDC1,
+
+23 = LEDC2,
+
+24 = LEDC3,
+
+25 = LEDC4,
+
+26 = LEDC5,
+
+27 = LEDC6.
+
+28 = NC,
+
+29 = BI1,
+
+30 = BO1,
+
+31 = BO2,
+
+32 = BO3,
+
+33 = BO4,
+
+34 = D2,
+
+35 = D1,
+
+36 = D5,
+
+37 = D6,
+
+38 = NC,
+
+39 = NC,
+
+40 = CLR,
+
+### ATTMega4809 direct Manipulation port layout:
+PORTA
+
+PA0 = BI4 = EXTCLK,
+
+PA1 = LEDR1,
+
+PA2 = D3 = TWI = SDA,
+
+PA3 = D4 = TWI = SCL,
+
+PA4 = CLK = MOSI,
+
+PA5 = ENP = MISO,
+
+PA6 = ENP = SCK,
+
+PA7 = RCO = CLKOUT = SS,
+
+PORTB
+
+PB0 = LEDR2,
+
+PB1 = LEDR3,
+
+PB2 = NC,
+
+PB3 = NC,
+
+PB4 = NC,
+
+PB5 = NC,
+
+
+PORTC
+
+PC0 = D10 = MOSI (3),
+
+PC1 = D9 = MISO (3),
+
+PC2 = D8 = TWI = SCK (3),
+
+PC3 = B7 = TWI = SS (3),
+
+PC4 = BI3,
+
+PC5 = BI2,
+
+PC6 = NC,
+
+PC7 = LEDR4,
+
+PORTD
+
+PD0 = LEDC1,
+
+PD1 = LEDC2,
+
+PD2 = LEDC3,
+
+PD3 = LEDC4,
+
+PD4 = LEDC5,
+
+PD5 = LEDC6,
+
+PD6 = NC,
+
+PD7 = BI1 = VREFA,
+
+
+PORTE
+
+PE0 =  BO1 = MOSI (3),
+
+PE1 =  BO2 = MISO (3),
+
+PE2 =  BO3 = SCK (3),
+
+PE3 = BO4 = SS (3),
+
+ 
+PORTF
+
+PF0 = D2 = TOSC1 = TxD,
+
+PF1 = D1 = TOSC2 = RxD,
+
+PF2 = D5 = TWI = XCK,
+
+PF3 = D6 = TWI = XDIR,
+
+PF4 = NC,
+
+PF5 = NC,
+
+PF6 = CLR = RESET,
 
 ## Contributing
 Contributions are welcome! Please feel free to submit issues, fix the project, and create pull requests.
