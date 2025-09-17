@@ -1,5 +1,8 @@
-# BreadboarD GeniuS Logic Gates and Binary Counters
+# BreadboarD GeniuS Logic Gates and Binary Counters V1
 ## Built around the ATTiny1616 and ATMega4809 MCU
+## This Release of hardware will not be sold. This repo will only serve those who were lucky enough to pick up a demo kit.
+## The demo kit enabled us to make vast improvements to the design of the hardware, and as such, we now have a V2 repo that supports the new and improved hardware.
+## the hardware will be available soon in our Etsy store > https://breadboardgenius.etsy.com
 
 ## Description
 This project implements various logic gates (AND/NAND, OR/NOR, XOR/XNOR, Dual NOT, MAJORITY/MINORITY) using the ATTiny1616 microcontroller. The code is designed for educational purposes and to demonstrate the implementation of basic digital logic in embedded systems.
@@ -277,7 +280,7 @@ Contributions are welcome! Please feel free to submit issues, fix the project, a
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Contact
-You can reach me at [support@breadboardgenius.com](mailto:support@breadboardgenius.com) for any questions or suggestions.
+You can reach us at [support@breadboardgenius.com](mailto:support@breadboardgenius.com) for any questions or suggestions.
 
 
 
