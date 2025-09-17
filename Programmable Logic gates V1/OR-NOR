@@ -1,0 +1,88 @@
+// Define pin mappings
+const int inputPin1 = 15;  // Physical pin 15 = INPUT 1
+const int inputPin2 = 16;  // Physical pin 16 = INPUT 2
+const int inputPin3 = 0;   // Physical pin 0 = INPUT 3
+const int ledInput1 = 1;   // Physical pin 1 = INPUT LED 1
+const int ledInput2 = 2;   // Physical pin 2 = INPUT LED 2
+const int ledInput3 = 3;   // Physical pin 3 = INPUT LED 3
+const int outputPin1 = 9;  // Physical pin 9 = OUTPUT 1
+const int outputPin2 = 8;  // Physical pin 8 = OUTPUT 2
+const int ledOutput1 = 7;  // Physical pin 7 = OUTPUT LED 1
+const int ledOutput2 = 6;  // Physical pin 6 = OUTPUT LED 2
+const int gateLED = 5;     // Physical pin 5 = GATE LED
+
+void setup() {
+  // Set input pins as INPUT
+  pinMode(inputPin1, INPUT);
+  pinMode(inputPin2, INPUT);
+  pinMode(inputPin3, INPUT);
+
+  // Set LED pins for inputs as OUTPUT
+  pinMode(ledInput1, OUTPUT);
+  pinMode(ledInput2, OUTPUT);
+  pinMode(ledInput3, OUTPUT);
+
+  // Set logic output pins as OUTPUT
+  pinMode(outputPin1, OUTPUT);
+  pinMode(outputPin2, OUTPUT);
+
+  // Set LED pins for outputs as OUTPUT
+  pinMode(ledOutput1, OUTPUT);
+  pinMode(ledOutput2, OUTPUT);
+
+  // Set Logic Gate Symbol LED pin as OUTPUT
+  pinMode(gateLED, OUTPUT);
+
+  // Turn on the Logic Gate Symbol LED
+  digitalWrite(gateLED, HIGH);
+
+  // LED Test
+  for (int i = 1; i <= PIN3; i++) {
+  digitalWrite(ledInput1, HIGH);
+  delay(50);
+  digitalWrite(ledInput1, LOW);
+  digitalWrite(ledInput2, HIGH);
+  delay(50);
+  digitalWrite(ledInput2, LOW);
+  digitalWrite(ledInput3, HIGH);
+  delay(50);
+  digitalWrite(ledInput3, LOW);
+  digitalWrite(gateLED, HIGH);
+  delay(50);
+  digitalWrite(gateLED, LOW);
+  digitalWrite(ledOutput1, HIGH);
+  delay(50);
+  digitalWrite(ledOutput1, LOW);
+  digitalWrite(ledOutput2, HIGH);
+  delay(50);
+  digitalWrite(ledOutput2, LOW);
+  digitalWrite(gateLED, LOW);
+  delay(50);
+  digitalWrite(gateLED, HIGH);
+}
+
+void loop() {
+  // Read the input states
+  int input1 = digitalRead(inputPin1);
+  int input2 = digitalRead(inputPin2);
+  int input3 = digitalRead(inputPin3);
+
+  // Set the LEDs to reflect the input states
+  digitalWrite(ledInput1, input1);
+  digitalWrite(ledInput2, input2);
+  digitalWrite(ledInput3, input3);
+
+  // Calculate OR result
+  int orResult = input1 | input2 | input3;
+
+  // Calculate NOR result (inverted OR result)
+  int norResult = !orResult;
+
+  // Set the logic outputs
+  digitalWrite(outputPin1, orResult);  // OR output
+  digitalWrite(outputPin2, norResult); // NOR output
+
+  // Set the LEDs for outputs
+  digitalWrite(ledOutput1, orResult);  // LED for OR output
+  digitalWrite(ledOutput2, norResult); // LED for NOR output
+}
