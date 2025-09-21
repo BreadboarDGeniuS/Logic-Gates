@@ -96,6 +96,14 @@
 #define O2B PIN_PC0
 #define O2C PIN_PC1
 
+// =========================
+// Factory default gate family
+// Change this value to select which gate type new devices boot into
+// (used if EEPROM has no valid saved gate yet).
+// Options: GF_ANDNAND, GF_ORNOR, GF_XORXNOR, GF_MAJMIN, GF_DUALNOT
+// =========================
+#define FACTORY_DEFAULT_GATE GF_ORNOR   // <--- user can change here
+
 // ========================= WS2812 LEDs =========================
 // 7 pixels total: 0..3 inputs, 4 center (family color), 5=Y, 6=/Y
 #define LED_PIN   PIN_PA4
@@ -118,7 +126,7 @@ enum GateFamily : uint8_t { GF_ANDNAND=0, GF_ORNOR, GF_XORXNOR, GF_MAJMIN, GF_DU
 
 static bool    g_hasOLED  = false; // set true after successful probe
 static uint8_t g_oledAddr = 0x3C;  // default, 0x3D as fallback
-static uint8_t g_gateFamily = GF_ANDNAND; // current family (EEPROM-backed)
+static uint8_t g_gateFamily = FACTORY_DEFAULT_GATE;
 
 // ========================= Input reading helpers =========================
 
@@ -422,7 +430,7 @@ static inline bool evalY_MAJ(bool a,bool b,bool c,bool d){ uint8_t s=a+b+c+d; re
 
 static inline void loadSettings(){
   uint8_t v = EEPROM.read(EE_GATE_FAMILY);
-  if (v >= GF__COUNT) v = GF_ANDNAND;
+	if (v >= GF__COUNT) v = FACTORY_DEFAULT_GATE;
   g_gateFamily = v;
 }
 
