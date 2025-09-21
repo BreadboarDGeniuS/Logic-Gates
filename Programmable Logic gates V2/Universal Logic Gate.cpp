@@ -24,6 +24,13 @@
   • GREEN = true for non-inverted outputs (Y).
   • RED   = true for inverted outputs (NAND/NOR/XNOR/NOT).
   • In Dual NOT, both outputs are inverters -> both RED when high.
+  
+  Gate Identification LED
+  • AND/NAND → Green (G=64)
+  • OR/NOR → Amber (R=48, G=24)
+  • XOR/XNOR → Magenta-ish (R=32, B=48)
+  • MAJORITY/MINORITY → Yellow (R=48, G=48)
+  • Dual NOT → Cyan-ish (G=32, B=48)
 
   TIMING / ROBUSTNESS
   -------------------
