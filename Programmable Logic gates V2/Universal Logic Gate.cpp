@@ -1,11 +1,11 @@
 /*
   ======================================================================
-  ATtiny1616 Programmable Logic Gate — Firmware v1.0.0 (Annotated)
+  BreadboarD GeniuS Programmable Logic Gate — Firmware v1.0.0
   Date: 2025-09-21
 
   WHAT THIS DOES
   --------------
-  • Turns an ATtiny1616 board into a small, configurable logic gate.
+  • Programs the BreadboarD Genius programmable logic gate into a universal logic gate
   • Optional SSD1306 OLED shows a D-shaped gate symbol with inputs/outputs.
   • WS2812 LEDs show input rows and outputs; center LED shows family color.
   • Gate family (AND/NAND, OR/NOR, XOR/XNOR, MAJ/MIN, Dual NOT) persists in EEPROM.
@@ -41,14 +41,14 @@
 
   HARDWARE EXPECTATIONS
   ---------------------
-  • External 100 kΩ pulldowns fitted on all logic inputs.
-  • WS2812 chain (7 pixels) on PA4, 5 V supply with adequate decoupling.
+  • BreadboarD GeniuS Logic Gate Module V2
+  • WS2812 chain (7 pixels) on PA4.
   • Optional SSD1306 128x64 I2C @ 0x3C (or 0x3D).
-  • UPDI programmer (jtag2updi etc.) to flash the 1616.
+  • UPDI programmer (CH340, part of the main storage case) to flash the 1616.
 
   LICENSE
   -------
-  Use freely. If you ship, send a photo — we’ll brag.
+  This project is licensed under the MIT License - see the LICENSE file for details.
 
   ======================================================================
 */
